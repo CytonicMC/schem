@@ -22,7 +22,6 @@ import java.util.Objects;
 
 import static net.hollowcube.schem.old.CoordinateUtil.blockIndex;
 
-@SuppressWarnings("UnstableApiUsage")
 final class SizedSchematicBuilder implements SchematicBuilder {
     private final CompoundBinaryTag.Builder metadata = CompoundBinaryTag.builder();
     private final Int2ObjectMap<BlockEntityData> blockEntities = new Int2ObjectOpenHashMap<>();
@@ -61,7 +60,7 @@ final class SizedSchematicBuilder implements SchematicBuilder {
 
         var blockHandler = block.handler();
         if (blockHandler != null) {
-            var blockEntityId = blockHandler.getNamespaceId().asString();
+            var blockEntityId = blockHandler.getKey().asString();
             var blockEntityData = Objects.requireNonNullElse(block.nbt(), CompoundBinaryTag.empty());
             blockEntities.put(blockIndex, new BlockEntityData(blockEntityId, relPos, blockEntityData));
         }
