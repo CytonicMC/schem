@@ -44,7 +44,7 @@ final class ReadHelpers {
         assertTrue(block != null, "unknown block: {0}", name);
 
         var propsTag = tag.getCompound("Properties");
-        if (propsTag.size() == 0) return block;
+        if (propsTag.isEmpty()) return block;
         var properties = new HashMap<String, String>();
         for (var entry : propsTag) {
             assertTrue(entry.getValue().type() == BinaryTagTypes.STRING, "expected property value to be a string");
