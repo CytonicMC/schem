@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
+@SuppressWarnings("unused")
 public class DetectingSchematicReader implements SchematicReader {
 
     @Override
@@ -31,11 +32,8 @@ public class DetectingSchematicReader implements SchematicReader {
         final Set<String> keys = rootPair.getValue().keySet();
         return switch (rootPair.getKey()) {
             case "" -> {
-                // An empty key at the root can either be a Structure, Litematica, or Sponge V3 schematic
-                if (keys.contains("palette") || keys.contains("palettes")) {
-                    // Definitely a structure. Note that both others have palette but it is not in the root object.
-                    yield new StructureReader().read(rootPair);
-                } else if (keys.contains("MinecraftDataVersion") || keys.contains("Regions")) {
+                // An empty key at the root can either be Litematica, or Sponge V3 schematic
+                if (keys.contains("MinecraftDataVersion") || keys.contains("Regions")) {
                     // Definitely a Litematic schematic.
                     yield new LitematicaSchematicReader().read(rootPair);
                 }
@@ -43,18 +41,8 @@ public class DetectingSchematicReader implements SchematicReader {
                 // Otherwise, its probably a sponge schematic
                 yield new SpongeSchematicReader().read(rootPair);
             }
-            case "Schematic" -> {
-                // Schematic as the root key can be Sponge V1, V2 or an MCEdit schematic.
-                if (keys.contains("Materials") || keys.contains("Platform") || keys.contains("Blocks") || keys.contains("Data")) {
-                    // Any of these indicate an MCEdit schematic
-                    yield new MCEditSchematicReader().read(rootPair);
-                }
-
-                // Otherwise, its probably a sponge schematic
-                yield new SpongeSchematicReader().read(rootPair);
-            }
+            case "Schematic" -> new SpongeSchematicReader().read(rootPair);
             default -> throw new UnknownSchematicTypeException();
         };
     }
-    
 }

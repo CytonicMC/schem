@@ -5,6 +5,6 @@ final class NoopGameDataProvider implements GameDataProvider {
 
     @Override
     public int dataVersion() {
-        return 3700; // 1.20.4
+        return 4438; // 1.21.7
     }
 }

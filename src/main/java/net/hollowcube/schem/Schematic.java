@@ -17,14 +17,9 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * <p>An publicly-immutable copy of any loaded schematic. This interface defines the basic requirements for any schematic, however
- * this may not be a complete representation of the internal details of a schematic. For example, {@link Structure}
- * supports multiple palettes, however this information is lost in the generic Schematic api (the first palette is used).</p>
- *
- * <p>Any schematic may be written to any {@link net.hollowcube.schem.writer.SchematicWriter}, no matter the type. If
- * the type does not match the writer, it will be converted as it is written (note that this conversion could be a
- * relatively expensive process.</p>
+ * <p>A publicly immutable copy of any loaded schematic. This interface defines the basic requirements for any schematic.</p>
  */
+@SuppressWarnings("unused")
 public interface Schematic {
 
     static @NotNull Schematic empty() {
@@ -41,12 +36,14 @@ public interface Schematic {
     default @Nullable String name() {
         return null;
     }
+
     /**
      * Returns the author of the schematic, if available.
      */
     default @Nullable String author() {
         return null;
     }
+
     /**
      * Returns the creation time of the schematic, if available.
      */
@@ -55,6 +52,7 @@ public interface Schematic {
     }
 
     @NotNull Point size();
+
     default @NotNull Point offset() {
         return Vec.ZERO;
     }
@@ -70,12 +68,15 @@ public interface Schematic {
     default @NotNull RelativeBlockBatch createBatch() {
         return createBatch(Rotation.NONE, null);
     }
+
     default @NotNull RelativeBlockBatch createBatch(@NotNull BlockTransformer blockTransformer) {
         return createBatch(Rotation.NONE, blockTransformer);
     }
+
     default @NotNull RelativeBlockBatch createBatch(@NotNull Rotation rotation) {
         return createBatch(rotation, null);
     }
+
     default @NotNull RelativeBlockBatch createBatch(@NotNull Rotation rotation, @Nullable BlockTransformer blockTransformer) {
         RelativeBlockBatch batch = new RelativeBlockBatch(new BatchOption().setCalculateInverse(true));
         forEachBlock(rotation, (pos, block) -> {
@@ -94,6 +95,7 @@ public interface Schematic {
     default boolean hasBlockData() {
         return false;
     }
+
     /**
      * Returns the block palette for the entire schematic, zero indexed with no empty spaces.
      *
@@ -106,6 +108,7 @@ public interface Schematic {
     default @NotNull List<Block> blockPalette() {
         return List.of();
     }
+
     /**
      * Returns the block data for the entire schematic. The format is (size.x * size.y * size.z) var ints
      * in a row, each corresponding to an entry in {@link #blockPalette()}.
@@ -119,6 +122,7 @@ public interface Schematic {
     default @NotNull ByteArrayBinaryTag blockData() {
         return SpongeSchematic.EMPTY_BYTE_ARRAY;
     }
+
     default @NotNull Collection<BlockEntityData> blockEntities() {
         return List.of();
     }
@@ -126,9 +130,11 @@ public interface Schematic {
     default boolean hasBiomeData() {
         return false;
     }
+
     default @NotNull List<String> biomePalette() {
         return List.of();
     }
+
     default @NotNull ByteArrayBinaryTag biomeData() {
         return SpongeSchematic.EMPTY_BYTE_ARRAY;
     }
