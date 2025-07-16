@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
+@SuppressWarnings("unused")
 public class DetectingSchematicReader implements SchematicReader {
 
     @Override
