@@ -43,18 +43,9 @@ public class DetectingSchematicReader implements SchematicReader {
                 // Otherwise, its probably a sponge schematic
                 yield new SpongeSchematicReader().read(rootPair);
             }
-            case "Schematic" -> {
-                // Schematic as the root key can be Sponge V1, V2 or an MCEdit schematic.
-                if (keys.contains("Materials") || keys.contains("Platform") || keys.contains("Blocks") || keys.contains("Data")) {
-                    // Any of these indicate an MCEdit schematic
-                    yield new MCEditSchematicReader().read(rootPair);
-                }
-
-                // Otherwise, its probably a sponge schematic
-                yield new SpongeSchematicReader().read(rootPair);
-            }
+            case "Schematic" -> new SpongeSchematicReader().read(rootPair);
             default -> throw new UnknownSchematicTypeException();
         };
     }
-    
+
 }
