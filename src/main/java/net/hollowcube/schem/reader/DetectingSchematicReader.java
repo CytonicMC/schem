@@ -31,11 +31,8 @@ public class DetectingSchematicReader implements SchematicReader {
         final Set<String> keys = rootPair.getValue().keySet();
         return switch (rootPair.getKey()) {
             case "" -> {
-                // An empty key at the root can either be a Structure, Litematica, or Sponge V3 schematic
-                if (keys.contains("palette") || keys.contains("palettes")) {
-                    // Definitely a structure. Note that both others have palette but it is not in the root object.
-                    yield new StructureReader().read(rootPair);
-                } else if (keys.contains("MinecraftDataVersion") || keys.contains("Regions")) {
+                // An empty key at the root can either be Litematica, or Sponge V3 schematic
+                if (keys.contains("MinecraftDataVersion") || keys.contains("Regions")) {
                     // Definitely a Litematic schematic.
                     yield new LitematicaSchematicReader().read(rootPair);
                 }
@@ -47,5 +44,4 @@ public class DetectingSchematicReader implements SchematicReader {
             default -> throw new UnknownSchematicTypeException();
         };
     }
-
 }

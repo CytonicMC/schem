@@ -17,13 +17,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * <p>An publicly-immutable copy of any loaded schematic. This interface defines the basic requirements for any schematic, however
- * this may not be a complete representation of the internal details of a schematic. For example, {@link Structure}
- * supports multiple palettes, however this information is lost in the generic Schematic api (the first palette is used).</p>
- *
- * <p>Any schematic may be written to any {@link net.hollowcube.schem.writer.SchematicWriter}, no matter the type. If
- * the type does not match the writer, it will be converted as it is written (note that this conversion could be a
- * relatively expensive process.</p>
+ * <p>A publicly immutable copy of any loaded schematic. This interface defines the basic requirements for any schematic.</p>
  */
 public interface Schematic {
 
