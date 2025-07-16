@@ -5,6 +5,7 @@ import net.hollowcube.schem.BlockEntityData;
 import net.hollowcube.schem.Schematic;
 import net.hollowcube.schem.SpongeSchematic;
 import net.hollowcube.schem.util.GameDataProvider;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.nbt.*;
 import net.minestom.server.command.builder.arguments.minecraft.ArgumentBlockState;
 import net.minestom.server.command.builder.exception.ArgumentSyntaxException;
@@ -114,7 +115,7 @@ public class SpongeSchematicReader implements SchematicReader {
             var tileEntities = root.getList(version == 1 ? "TileEntities" : "BlockEntities", BinaryTagTypes.COMPOUND);
             for (var tileEntity : tileEntities) {
                 var data = (CompoundBinaryTag) tileEntity;
-                var id = getRequired(data, "Id", BinaryTagTypes.STRING);
+                var id = Key.key(getRequired(data, "Id", BinaryTagTypes.STRING).value());
                 var pos = getRequiredPoint(data, "Pos");
                 // ContentVersion ignored.
 
@@ -128,8 +129,8 @@ public class SpongeSchematicReader implements SchematicReader {
 
                 var blockEntityData = extracted.build();
                 if (dataVersion < dataVersionMax)
-                    blockEntityData = gameData.upgradeBlockEntity(dataVersion, dataVersionMax, id.value(), blockEntityData);
-                blockEntities.put(blockIndex(size, pos), new BlockEntityData(id.value(), pos, blockEntityData));
+                    blockEntityData = gameData.upgradeBlockEntity(dataVersion, dataVersionMax, id, blockEntityData);
+                blockEntities.put(blockIndex(size, pos), new BlockEntityData(id, pos, blockEntityData));
             }
         } else {
             var blocksContainer = root.getCompound("Blocks");
@@ -157,12 +158,12 @@ public class SpongeSchematicReader implements SchematicReader {
             // === Block entities ===
             for (var blockEntityTag : blocksContainer.getList("BlockEntities", BinaryTagTypes.COMPOUND)) {
                 var blockEntity = (CompoundBinaryTag) blockEntityTag;
-                var id = getRequired(blockEntity, "Id", BinaryTagTypes.STRING);
+                var id = Key.key(getRequired(blockEntity, "Id", BinaryTagTypes.STRING).value());
                 var pos = getRequiredPoint(blockEntity, "Pos");
                 var data = blockEntity.getCompound("Data");
                 if (dataVersion < gameData.dataVersion())
-                    data = gameData.upgradeBlockEntity(dataVersion, gameData.dataVersion(), id.value(), data);
-                blockEntities.put(blockIndex(size, pos), new BlockEntityData(id.value(), pos, data));
+                    data = gameData.upgradeBlockEntity(dataVersion, gameData.dataVersion(), id, data);
+                blockEntities.put(blockIndex(size, pos), new BlockEntityData(id, pos, data));
             }
         }
 
