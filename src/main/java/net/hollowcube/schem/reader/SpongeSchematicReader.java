@@ -104,6 +104,7 @@ public class SpongeSchematicReader implements SchematicReader {
                     String blockState = entry.getKey();
                     if (dataVersion < dataVersionMax)
                         blockState = gameData.upgradeBlockState(dataVersion, dataVersionMax, blockState);
+                    //noinspection deprecation
                     blockPalette[paletteId] = ArgumentBlockState.staticParse(blockState);
                 } catch (ArgumentSyntaxException e) {
                     throw new IllegalStateException("invalid block type: " + entry.getKey(), e);
@@ -139,6 +140,7 @@ public class SpongeSchematicReader implements SchematicReader {
             for (var entry : blockPaletteObject) {
                 assertTrue(entry.getValue().type() == BinaryTagTypes.INT, "expected palette entry to be an int");
                 var paletteId = ((IntBinaryTag) entry.getValue()).value();
+                //noinspection deprecation
                 var block = ArgumentBlockState.staticParse(entry.getKey());
 
                 // Increase the palette size if the input object has missing indices (dumb)
@@ -180,7 +182,7 @@ public class SpongeSchematicReader implements SchematicReader {
                 //todo for version 2 -> 3 i need to inflate the data to 3d.
             }
             biomeData = root.getByteArray("BiomeData");
-        } else if (version >= 3) {
+        } else if (version == 3) {
             var biomesContainer = root.getCompound("Biomes");
             var biomePaletteObject = biomesContainer.getCompound("Palette");
             biomePalette = new String[biomePaletteObject.size()];
